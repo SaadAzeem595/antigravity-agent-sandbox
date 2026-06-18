@@ -1,0 +1,4 @@
+customer-support-agent/.venv/
+customer-support-agent/.env
+__pycache__/
+*.py[cod]
