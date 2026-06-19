@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
+import logging
 
 import google.auth
 from fastapi import FastAPI
@@ -21,10 +22,36 @@ from google.cloud import logging as google_cloud_logging
 from app.app_utils.telemetry import setup_telemetry
 from app.app_utils.typing import Feedback
 
+class FallbackLogger:
+    def __init__(self, name):
+        self._logger = logging.getLogger(name)
+
+    def log_struct(self, info_dict, severity="INFO"):
+        level = logging.INFO
+        if severity == "ERROR":
+            level = logging.ERROR
+        elif severity == "WARNING":
+            level = logging.WARNING
+        self._logger.log(level, f"Struct: {info_dict}")
+
+    def info(self, msg):
+        self._logger.info(msg)
+
+    def warning(self, msg):
+        self._logger.warning(msg)
+
+    def error(self, msg):
+        self._logger.error(msg)
+
 setup_telemetry()
-_, project_id = google.auth.default()
-logging_client = google_cloud_logging.Client()
-logger = logging_client.logger(__name__)
+has_gcp_creds = False
+try:
+    _, project_id = google.auth.default()
+    logging_client = google_cloud_logging.Client()
+    logger = logging_client.logger(__name__)
+    has_gcp_creds = True
+except Exception:
+    logger = FallbackLogger(__name__)
 allow_origins = (
     os.getenv("ALLOW_ORIGINS", "").split(",") if os.getenv("ALLOW_ORIGINS") else None
 )
@@ -44,7 +71,7 @@ app: FastAPI = get_fast_api_app(
     artifact_service_uri=artifact_service_uri,
     allow_origins=allow_origins,
     session_service_uri=session_service_uri,
-    otel_to_cloud=True,
+    otel_to_cloud=has_gcp_creds,
 )
 app.title = "shopping-assistant"
 app.description = "API for interacting with the Agent shopping-assistant"

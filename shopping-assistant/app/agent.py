@@ -23,11 +23,18 @@ from google.genai import types
 
 import os
 import google.auth
+from dotenv import load_dotenv
 
-_, project_id = google.auth.default()
-os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
-os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+load_dotenv()
+
+# Check if we have default credentials, otherwise fallback to standard GenAI with API Key
+try:
+    _, project_id = google.auth.default()
+    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
+    os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
+    os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+except Exception:
+    os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "False"
 
 
 # In-memory store for single-use discount codes and registered user IDs
@@ -75,7 +82,7 @@ root_agent = Agent(
     name="root_agent",
     model=Gemini(
         model="gemini-flash-latest",
-        api_key="AIzaSyD-mock-key-value-12345",
+        api_key=os.environ.get("GEMINI_API_KEY", "AIzaSyD-mock-key-value-12345"),
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
     instruction="You are a helpful AI shopping assistant for a retail store. Help customers find products, answer shopping queries, and assist them in redeeming discount codes when they provide their registered user ID. You must use the redeem_discount_code tool to redeem discount codes.",
