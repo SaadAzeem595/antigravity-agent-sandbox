@@ -1,36 +1,46 @@
-# 🛠️ Core Tech Stack & Frameworks
+# 🌌 Antigravity Agent Sandbox
+
+Welcome to the **Antigravity Agent Sandbox**! This repository is a unified workspace for developing, evaluating, and testing autonomous AI agents.
+
+## 📁 Repository Structure
+
+The sandbox is organized into specialized agent subdirectories:
+
+1. **[ambient-expense-agent](file:///D:/Vibecode_an_ADK_2.0/ambient-expense-agent/ambient-expense-agent)**: An expense auditing ReAct agent with local test suites and automated evaluation loops (including PII leak and prompt injection scans).
+2. **[customer-support-agent](file:///D:/Vibecode_an_ADK_2.0/ambient-expense-agent/customer-support-agent)**: A support agent designed to handle user requests and customer service queries.
+
+---
+
+## 🛠️ Core Tech Stack & Frameworks
+
 The agents within this sandbox utilize variations of the following modern AI engineering stacks:
+- **Orchestration**: LangChain, LangGraph, CrewAI, Antigravity Core / ADK
+- **Engines**: Advanced Large Language Models (LLMs) & Custom Embeddings
+- **APIs & Backends**: FastAPI, Python 3.12+
+- **Infrastructure & Tracking**: MLflow, Docker, Virtual Environments (venv)
 
-Orchestration: LangChain, LangGraph, CrewAI, Antigravity Core
-
-Engines: Advanced Large Language Models (LLMs) & Custom Embeddings
-
-APIs & Backends: FastAPI, Python 3.12+
-
-Infrastructure & Tracking: MLflow, Docker, Virtual Environments (venv)
+---
 
 ## ⚙️ Getting Started (Global Guide)
+
 To explore, run, or build upon the agents in this sandbox, follow these foundational setup steps:
 
-1. Clone the Repository
-Bash
-git clone [https://github.com/your-username/antigravity-agent-sandbox.git](https://github.com/your-username/antigravity-agent-sandbox.git)
+### 1. Clone the Repository
+```bash
+git clone https://github.com/SaadAzeem595/antigravity-agent-sandbox.git
 cd antigravity-agent-sandbox
-2. Environment Setup
-Each agent typically runs inside its own subdirectory with a dedicated environment, but you can spin up a localized workspace easily:
+```
 
-PowerShell
-### Navigate to a specific agent directory
-cd weather-assistant
+### 2. Run an Agent Project
+Each agent runs inside its own subdirectory with its own dependencies. For example, to set up and run the **Ambient Expense Agent**:
 
-### Create a Python 3.12+ virtual environment
-py -3.12 -m venv venv
+```bash
+# Navigate to the agent directory
+cd ambient-expense-agent
 
-### Activate the virtual environment
-### On Windows (PowerShell):
-.\venv\Scripts\Activate.ps1
-### (Note: If you encounter an Execution Policy error, run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass)
+# Install dependencies using agents-cli/uv
+agents-cli install
 
-OPENAI_API_KEY=your_openai_key_here
-ANTHROPIC_API_KEY=your_anthropic_key_here
-# Agent-specific keys (e.g., OpenWeatherMap, Serper, etc.)
+# Start the local development playground
+agents-cli playground
+```
